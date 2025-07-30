@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BookingSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers;
 
