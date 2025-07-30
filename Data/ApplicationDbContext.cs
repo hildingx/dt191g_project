@@ -9,4 +9,6 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+    public DbSet<Computer> Computers { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
 }
