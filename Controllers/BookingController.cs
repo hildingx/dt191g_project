@@ -6,23 +6,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookingSystem.Controllers
 {
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public BookingController(ApplicationDbContext context)
+        public BookingController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Booking
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bookings.Include(b => b.Computer).Include(b => b.User);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var bookings = _context.Bookings
+                .Include(b => b.Computer)
+                .Where(b => b.UserId == userId);
+
+            return View(await bookings.ToListAsync());
         }
 
         // GET: Booking/Details/5
@@ -58,14 +65,17 @@ namespace BookingSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ComputerId,StartTime,EndTime,UserId")] Booking booking)
+        public async Task<IActionResult> Create([Bind("Id,ComputerId,StartTime,EndTime")] Booking booking)
         {
             if (ModelState.IsValid)
             {
+                booking.UserId = _userManager.GetUserId(User);
+
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
             ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
             return View(booking);
@@ -102,7 +112,7 @@ namespace BookingSystem.Controllers
             }
 
             if (ModelState.IsValid)
-            {
+            {               
                 try
                 {
                     _context.Update(booking);

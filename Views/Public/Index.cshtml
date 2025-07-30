@@ -1,0 +1,39 @@
+@model List<ComputerAvailabilityViewModel>
+
+<h2>Datorer Tillgänglighet just nu</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Namn</th>
+            <th>Plats</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.Location</td>
+                <td>
+                    @if (c.IsAvailableNow)
+                    {
+                        <span class="text-success">Tillgänglig</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Upptagen</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-area="" asp-controller="Account" asp-action="Login">Logga in</a> för att boka en dator.
+    </p>
+}

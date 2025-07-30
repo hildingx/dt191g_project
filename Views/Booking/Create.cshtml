@@ -14,7 +14,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ComputerId" class="control-label"></label>
-                <select asp-for="ComputerId" class ="form-control" asp-items="ViewBag.ComputerId"></select>
+                <select asp-for="ComputerId" class="form-control" asp-items="ViewBag.ComputerId"></select>
+                <span asp-validation-for="ComputerId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label"></label>
