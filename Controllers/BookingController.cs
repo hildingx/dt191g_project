@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -76,7 +78,7 @@ namespace BookingSystem.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
+
             ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
             return View(booking);
         }
@@ -112,7 +114,7 @@ namespace BookingSystem.Controllers
             }
 
             if (ModelState.IsValid)
-            {               
+            {
                 try
                 {
                     _context.Update(booking);
