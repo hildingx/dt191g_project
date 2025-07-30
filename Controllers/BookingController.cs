@@ -67,17 +67,17 @@ namespace BookingSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ComputerId,StartTime,EndTime")] Booking booking)
         {
+            booking.UserId = _userManager.GetUserId(User);
+            ModelState.Remove(nameof(booking.UserId));
+
             if (ModelState.IsValid)
             {
-                booking.UserId = _userManager.GetUserId(User);
-
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             
             ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
             return View(booking);
         }
 

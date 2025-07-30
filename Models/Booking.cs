@@ -10,7 +10,7 @@ public class Booking
     public int ComputerId { get; set; }
 
     [ForeignKey("ComputerId")]
-    public required Computer Computer { get; set; }
+    public Computer? Computer { get; set; }
 
     [Required]
     public DateTime StartTime { get; set; }
@@ -18,9 +18,10 @@ public class Booking
     [Required]
     public DateTime EndTime { get; set; }
 
-    // Koppling till Identity-användare
-    public required string UserId { get; set; }
+    [Required]
+    public string? UserId { get; set; }
 
     [ForeignKey("UserId")]
-    public required IdentityUser User { get; set; }
+    public IdentityUser? User { get; set; }
 }
+
