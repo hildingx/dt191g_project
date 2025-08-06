@@ -69,6 +69,8 @@ namespace BookingSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ComputerId,StartTime,EndTime")] Booking booking)
         {
+            var now = DateTime.Now;
+
             booking.UserId = _userManager.GetUserId(User);
             ModelState.Remove(nameof(booking.UserId));
 
@@ -81,6 +83,25 @@ namespace BookingSystem.Controllers
             if (isOverlapping)
             {
                 ModelState.AddModelError("", "Datorn är redan bokad under valt tidsintervall.");
+            }
+
+            // Passerad tid
+            if (booking.StartTime < now)
+            {
+                ModelState.AddModelError(nameof(booking.StartTime), "Du kan inte boka en tid som passerat.");
+            }
+
+            // Sluttid före starttid
+            if (booking.EndTime <= booking.StartTime)
+            {
+                ModelState.AddModelError(nameof(booking.EndTime), "Sluttiden måste vara efter starttiden.");
+            }
+
+            // Max 2 timmar
+            var maxBookingLength = TimeSpan.FromHours(2);
+            if (booking.EndTime - booking.StartTime > maxBookingLength)
+            {
+                ModelState.AddModelError("", "En bokning får vara max 2 timmar.");
             }
 
             if (ModelState.IsValid)
