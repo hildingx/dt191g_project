@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingSystem.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ComputerController : Controller
     {
         private readonly ApplicationDbContext _context;
