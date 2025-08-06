@@ -72,6 +72,17 @@ namespace BookingSystem.Controllers
             booking.UserId = _userManager.GetUserId(User);
             ModelState.Remove(nameof(booking.UserId));
 
+            // Kolla om vald dator är bokad under valt intervall
+            bool isOverlapping = _context.Bookings.Any(b =>
+                b.ComputerId == booking.ComputerId &&
+                b.EndTime > booking.StartTime &&
+                b.StartTime < booking.EndTime);
+
+            if (isOverlapping)
+            {
+                ModelState.AddModelError("", "Datorn är redan bokad under valt tidsintervall.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(booking);
