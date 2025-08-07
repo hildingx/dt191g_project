@@ -29,7 +29,7 @@ namespace BookingSystem.Controllers
             var userId = _userManager.GetUserId(User);
             var bookings = _context.Bookings
                 .Include(b => b.Computer)
-                .Where(b => b.UserId == userId);
+                .Where(b => b.UserId == userId && b.EndTime > DateTime.Now);
 
             return View(await bookings.ToListAsync());
         }
