@@ -8,6 +8,7 @@
             <th>Namn</th>
             <th>Plats</th>
             <th>Status</th>
+            <th>Detaljer</th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,9 @@
                     {
                         <span class="text-danger">Upptagen</span>
                     }
+                </td>
+                <td>
+                    <a asp-controller="Public" asp-action="Details" asp-route-id="@c.Id">Visa</a>
                 </td>
             </tr>
         }

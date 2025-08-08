@@ -31,5 +31,30 @@ namespace BookingSystem.Controllers
 
             return View(viewModel);
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var comp = await _context.Computers
+                .Include(c => c.Bookings)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (comp == null) return NotFound();
+
+            var now = DateTime.Now;
+            var vm = new PublicComputerDetailsViewModel
+            {
+                ComputerId = comp.Id,
+                Name = comp.Name,
+                Location = comp.Location,
+                IsAvailableNow = !comp.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now),
+                Slots = comp.Bookings
+                    .Where(b => b.EndTime > now)
+                    .OrderBy(b => b.StartTime)
+                    .Select(b => new BookingSlotVM { StartTime = b.StartTime, EndTime = b.EndTime })
+                    .ToList()
+            };
+
+            return View(vm);
+        }
     }
 }

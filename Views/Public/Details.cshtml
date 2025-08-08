@@ -1,0 +1,46 @@
+@model PublicComputerDetailsViewModel
+
+<h2>@Model.Name</h2>
+<p>Plats: @Model.Location</p>
+<p>Status:
+    @if (Model.IsAvailableNow)
+    { <span class="text-success">Tillgänglig nu</span> }
+    else
+    { <span class="text-danger">Upptagen nu</span> }
+</p>
+
+<h4>Kommande bokningar</h4>
+@if (Model.Slots.Any())
+{
+    <table class="table">
+        <thead><tr><th>Start</th><th>Slut</th></tr></thead>
+        <tbody>
+        @foreach (var s in Model.Slots)
+        {
+            <tr>
+                <td>@s.StartTime</td>
+                <td>@s.EndTime</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Inga kommande bokningar.</p>
+}
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <a class="btn btn-primary"
+       asp-controller="Booking" asp-action="Create" asp-route-computerId="@Model.ComputerId">
+       Boka denna dator
+    </a>
+}
+else
+{
+    <a class="btn btn-outline-primary"
+       asp-area="Identity" asp-page="/Account/Login">
+       Logga in för att boka
+    </a>
+}
