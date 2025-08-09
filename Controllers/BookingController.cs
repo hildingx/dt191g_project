@@ -23,6 +23,9 @@ namespace BookingSystem.Controllers
             _userManager = userManager;
         }
 
+        private bool IsOwnerOrAdmin(Booking b)
+            => b.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin");
+
         // GET: Booking
         public async Task<IActionResult> Index()
         {
@@ -128,6 +131,8 @@ namespace BookingSystem.Controllers
             {
                 return NotFound();
             }
+            if (!IsOwnerOrAdmin(booking)) return Forbid();
+
             ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
             return View(booking);
@@ -144,6 +149,8 @@ namespace BookingSystem.Controllers
             {
                 return NotFound();
             }
+
+            if (!IsOwnerOrAdmin(booking)) return Forbid();
 
             if (ModelState.IsValid)
             {
@@ -187,6 +194,8 @@ namespace BookingSystem.Controllers
                 return NotFound();
             }
 
+            if (!IsOwnerOrAdmin(booking)) return Forbid();
+
             return View(booking);
         }
 
@@ -196,6 +205,9 @@ namespace BookingSystem.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
+
+            if (!IsOwnerOrAdmin(booking)) return Forbid();
+
             if (booking != null)
             {
                 _context.Bookings.Remove(booking);

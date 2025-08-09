@@ -37,7 +37,8 @@
 
 @if (!User.Identity.IsAuthenticated)
 {
-    <p>
-        <a asp-area="" asp-controller="Account" asp-action="Login">Logga in</a> för att boka en dator.
-    </p>
+    <a class="btn btn-outline-primary"
+       asp-area="Identity" asp-page="/Account/Login">
+       Logga in för att boka
+    </a>
 }

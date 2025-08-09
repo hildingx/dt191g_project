@@ -13,13 +13,16 @@
 @if (Model.Slots.Any())
 {
     <table class="table">
-        <thead><tr><th>Start</th><th>Slut</th></tr></thead>
+        <thead><tr><th>Start</th><th>Slut</th>
+        @if (User.IsInRole("Admin")) { <th>Användare</th> }
+        </tr></thead>
         <tbody>
         @foreach (var s in Model.Slots)
         {
             <tr>
                 <td>@s.StartTime</td>
                 <td>@s.EndTime</td>
+                @if (User.IsInRole("Admin")) { <td>@s.UserEmail</td> }
             </tr>
         }
         </tbody>

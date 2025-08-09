@@ -36,11 +36,14 @@ namespace BookingSystem.Controllers
         {
             var comp = await _context.Computers
                 .Include(c => c.Bookings)
+                    .ThenInclude(b => b.User)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (comp == null) return NotFound();
 
             var now = DateTime.Now;
+            var isAdmin = User.IsInRole("Admin");
+
             var vm = new PublicComputerDetailsViewModel
             {
                 ComputerId = comp.Id,
@@ -50,7 +53,7 @@ namespace BookingSystem.Controllers
                 Slots = comp.Bookings
                     .Where(b => b.EndTime > now)
                     .OrderBy(b => b.StartTime)
-                    .Select(b => new BookingSlotVM { StartTime = b.StartTime, EndTime = b.EndTime })
+                    .Select(b => new BookingSlotVM { StartTime = b.StartTime, EndTime = b.EndTime, UserEmail = isAdmin ? b.User?.Email : null })
                     .ToList()
             };
 
