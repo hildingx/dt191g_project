@@ -1,8 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Startsida";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center my-5">
+    <h1 class="display-4 fw-bold">Välkommen till Datorbokningen</h1>
+    <p class="lead">Se lediga datorer och boka en tid som passar dig.</p>
 </div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Tillgängliga datorer</h5>
+                <p class="card-text">Se vilka datorer som är lediga just nu.</p>
+                <a asp-controller="Public" asp-action="Index" class="btn btn-primary">Visa alla</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Mina bokningar</h5>
+                <p class="card-text">Hantera och avboka dina bokningar.</p>
+                <a asp-controller="Booking" asp-action="Index" class="btn btn-primary">Gå till mina bokningar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Logga in eller registrera</h5>
+                <p class="card-text">För att boka behöver du vara inloggad.</p>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary me-2">Logga in</a>
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary">Registrera</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.FeaturedComputers.Any())
+{
+    <hr class="my-5" />
+    <h2 class="h4 mb-3">Tillgängliga just nu</h2>
+    <div class="list-group">
+        @foreach (var c in Model.FeaturedComputers)
+        {
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+               asp-controller="Public" asp-action="Details" asp-route-id="@c.Id">
+                <span>
+                    <strong>@c.Name</strong>
+                    <span class="text-muted"> — @c.Location</span>
+                </span>
+                <span class="badge bg-success">Tillgänglig</span>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <hr class="my-5" />
+    <div class="alert alert-info">
+        Inga datorer är lediga exakt nu. <a asp-controller="Public" asp-action="Index">Visa alla datorer</a>.
+    </div>
+}
