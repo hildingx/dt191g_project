@@ -2,26 +2,39 @@
 
 <h2>@Model.Name</h2>
 <p>Plats: @Model.Location</p>
+
 <p>Status:
-    @if (Model.IsAvailableNow)
-    { <span class="text-success">Tillgänglig nu</span> }
+    @if (!Model.IsAvailable)
+    {
+        <span class="badge bg-warning text-dark">Avstängd</span>
+    }
+    else if (!Model.IsAvailableNow)
+    {
+        <span class="badge bg-danger">Upptagen nu</span>
+    }
     else
-    { <span class="text-danger">Upptagen nu</span> }
+    {
+        <span class="badge bg-success">Tillgänglig</span>
+    }
 </p>
 
 <h4>Kommande bokningar</h4>
 @if (Model.Slots.Any())
 {
-    <table class="table">
-        <thead><tr><th>Start</th><th>Slut</th>
-        @if (User.IsInRole("Admin")) { <th>Användare</th> }
-        </tr></thead>
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Start</th>
+                <th>Slut</th>
+                @if (User.IsInRole("Admin")) { <th>Användare</th> }
+            </tr>
+        </thead>
         <tbody>
         @foreach (var s in Model.Slots)
         {
             <tr>
-                <td>@s.StartTime</td>
-                <td>@s.EndTime</td>
+                <td>@s.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@s.EndTime.ToString("yyyy-MM-dd HH:mm")</td>
                 @if (User.IsInRole("Admin")) { <td>@s.UserEmail</td> }
             </tr>
         }
@@ -35,10 +48,13 @@ else
 
 @if (User.Identity?.IsAuthenticated ?? false)
 {
-    <a class="btn btn-primary"
-       asp-controller="Booking" asp-action="Create" asp-route-computerId="@Model.ComputerId">
-       Boka denna dator
-    </a>
+    if (Model.IsAvailable)
+    {
+        <a class="btn btn-primary"
+           asp-controller="Booking" asp-action="Create" asp-route-computerId="@Model.ComputerId">
+           Boka denna dator
+        </a>
+    }
 }
 else
 {

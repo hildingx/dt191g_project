@@ -1,42 +1,38 @@
 @model Booking
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
 }
 
-<h1>Details</h1>
+<h1>Bokningsdetaljer</h1>
+<hr />
 
-<div>
-    <h4>Booking</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Computer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Computer.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<dl class="row">
+    <dt class="col-sm-3">Dator</dt>
+    <dd class="col-sm-9">
+    @if (Model.Computer?.IsAvailable == false)
+    {
+        <span class="text-warning fw-bold">@Model.Computer.Name (Avstängd)</span>
+    }
+    else
+    {
+        @Model.Computer?.Name
+    }
+</dd>
+
+    <dt class="col-sm-3">Start</dt>
+    <dd class="col-sm-9">@Model.StartTime.ToString("yyyy-MM-dd HH:mm")</dd>
+
+    <dt class="col-sm-3">Slut</dt>
+    <dd class="col-sm-9">@Model.EndTime.ToString("yyyy-MM-dd HH:mm")</dd>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <dt class="col-sm-3">Användare</dt>
+        <dd class="col-sm-9">@Model.User?.Email</dd>
+    }
+</dl>
+
+<div class="mt-3">
+    <a class="btn btn-outline-secondary" asp-action="Index">Tillbaka</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Redigera</a>
 </div>

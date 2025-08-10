@@ -19,30 +19,31 @@ public class HomeController : Controller
         }
 
     public async Task<IActionResult> Index()
-        {
-            var now = DateTime.Now;
+    {
+        var now = DateTime.Now;
 
-            var featured = await _context.Computers
-                .Include(c => c.Bookings)
-                .Select(c => new ComputerAvailabilityViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Location = c.Location,
-                    IsAvailableNow = !c.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now)
-                })
-                .Where(c => c.IsAvailableNow)
-                .OrderBy(c => c.Name)
-                .Take(3)
-                .ToListAsync();
-
-            var vm = new HomeIndexViewModel
+        var featured = await _context.Computers
+            .Include(c => c.Bookings)
+            .Select(c => new ComputerAvailabilityViewModel
             {
-                FeaturedComputers = featured
-            };
+                Id = c.Id,
+                Name = c.Name,
+                Location = c.Location,
+                IsAvailable = c.IsAvailable,
+                IsAvailableNow = c.IsAvailable && !c.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now)
+            })
+            .Where(c => c.IsAvailableNow)
+            .OrderBy(c => c.Name)
+            .Take(3)
+            .ToListAsync();
 
-            return View(vm);
-        }
+        var vm = new HomeIndexViewModel
+        {
+            FeaturedComputers = featured
+        };
+
+        return View(vm);
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

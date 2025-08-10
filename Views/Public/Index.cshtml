@@ -18,14 +18,15 @@
                 <td>@c.Name</td>
                 <td>@c.Location</td>
                 <td>
-                    @if (c.IsAvailableNow)
-                    {
-                        <span class="text-success">Tillgänglig</span>
-                    }
-                    else
-                    {
-                        <span class="text-danger">Upptagen</span>
-                    }
+                    @if (!c.IsAvailableNow && !c.IsAvailable) {
+    <span class="badge bg-warning text-dark">Avstängd</span>
+}
+else if (!c.IsAvailableNow) {
+    <span class="badge bg-danger">Upptagen</span>
+}
+else {
+    <span class="badge bg-success">Tillgänglig</span>
+}
                 </td>
                 <td>
                     <a asp-controller="Public" asp-action="Details" asp-route-id="@c.Id">Visa</a>

@@ -58,10 +58,13 @@ namespace BookingSystem.Controllers
         }
 
         // GET: Booking/Create
-        public IActionResult Create()
+        public IActionResult Create(int? computerId)
         {
-            ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            var selectable = _context.Computers
+                .Where(c => c.IsAvailable)
+                .ToList();
+
+            ViewData["ComputerId"] = new SelectList(selectable, "Id", "Name", computerId);
             return View();
         }
 
@@ -76,6 +79,14 @@ namespace BookingSystem.Controllers
 
             booking.UserId = _userManager.GetUserId(User);
             ModelState.Remove(nameof(booking.UserId));
+
+            var computer = await _context.Computers.FindAsync(booking.ComputerId);
+            if (computer == null) return NotFound();
+
+            if (!computer.IsAvailable)
+            {
+                ModelState.AddModelError("", "Datorn är avstängd och kan inte bokas.");
+            }
 
             // Kolla om vald dator är bokad under valt intervall
             bool isOverlapping = _context.Bookings.Any(b =>
@@ -114,27 +125,46 @@ namespace BookingSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
+            var selectable = _context.Computers.Where(c => c.IsAvailable).ToList();
+            ViewData["ComputerId"] = new SelectList(selectable, "Id", "Name", booking.ComputerId);
             return View(booking);
         }
 
         // GET: Booking/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (id == null) return NotFound();
+
+            var booking = await _context.Bookings
+                .Include(b => b.Computer)
+                .FirstOrDefaultAsync(b => b.Id == id);
+            if (booking == null) return NotFound();
+
+            if (booking.UserId != _userManager.GetUserId(User) && !User.IsInRole("Admin"))
+                return Forbid();
+
+            var active = await _context.Computers
+                .Where(c => c.IsAvailable)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (booking.Computer is { IsAvailable: false })
             {
-                return NotFound();
+                active.Insert(0, booking.Computer);
+                ViewData["ComputerWarning"] = "Nuvarande dator är avstängd. Välj en annan innan du sparar.";
+                ViewData["ComputerSelectList"] = active
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.IsAvailable ? c.Name : $"{c.Name} (Avstängd)",
+                        Selected = c.Id == booking.ComputerId
+                    }).ToList();
+            }
+            else
+            {
+                ViewData["ComputerSelectList"] = new SelectList(active, "Id", "Name", booking.ComputerId);
             }
 
-            var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-            if (!IsOwnerOrAdmin(booking)) return Forbid();
-
-            ViewData["ComputerId"] = new SelectList(_context.Computers, "Id", "Name", booking.ComputerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
             return View(booking);
         }
 

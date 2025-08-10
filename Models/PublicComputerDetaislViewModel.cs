@@ -3,6 +3,7 @@ public class PublicComputerDetailsViewModel
     public int ComputerId { get; set; }
     public string? Name { get; set; }
     public string? Location { get; set; }
+    public bool IsAvailable { get; set; }
     public bool IsAvailableNow { get; set; }
     public List<BookingSlotVM> Slots { get; set; } = new();
 }
