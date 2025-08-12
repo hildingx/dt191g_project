@@ -1,45 +1,56 @@
 @model List<ComputerAvailabilityViewModel>
 
-<h2>Datorer Tillgänglighet just nu</h2>
+<div class="container my-5">
+    <h1 class="mb-4">Datorers tillgänglighet just nu</h1>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Namn</th>
-            <th>Plats</th>
-            <th>Status</th>
-            <th>Detaljer</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model)
-        {
-            <tr>
-                <td>@c.Name</td>
-                <td>@c.Location</td>
-                <td>
-                    @if (!c.IsAvailableNow && !c.IsAvailable) {
-    <span class="badge bg-warning text-dark">Avstängd</span>
-}
-else if (!c.IsAvailableNow) {
-    <span class="badge bg-danger">Upptagen</span>
-}
-else {
-    <span class="badge bg-success">Tillgänglig</span>
-}
-                </td>
-                <td>
-                    <a asp-controller="Public" asp-action="Details" asp-route-id="@c.Id">Visa</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Namn</th>
+                    <th>Plats</th>
+                    <th>Status</th>
+                    <th>Detaljer</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>@c.Name</td>
+                        <td>@c.Location</td>
+                        <td>
+                            @if (!c.IsAvailableNow && !c.IsAvailable)
+                            {
+                                <span class="badge bg-warning text-dark">Avstängd</span>
+                            }
+                            else if (!c.IsAvailableNow)
+                            {
+                                <span class="badge bg-danger">Upptagen</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Tillgänglig</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="Public" asp-action="Details" asp-route-id="@c.Id" class="btn btn-sm btn-outline-primary">
+                                Visa
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-@if (!User.Identity.IsAuthenticated)
-{
-    <a class="btn btn-outline-primary"
-       asp-area="Identity" asp-page="/Account/Login">
-       Logga in för att boka
-    </a>
-}
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="mt-4">
+            <a class="btn btn-outline-primary"
+               asp-area="Identity" asp-page="/Account/Login">
+               Logga in för att boka
+            </a>
+        </div>
+    }
+</div>

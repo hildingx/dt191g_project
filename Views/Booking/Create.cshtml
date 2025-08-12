@@ -1,41 +1,40 @@
 @model Booking
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Ny bokning";
 }
 
-<h1>Create</h1>
+<h1 class="page-title mt-5 mb-4 text-center">@ViewData["Title"]</h1>
 
-<h4>Booking</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ComputerId" class="control-label"></label>
-                <select asp-for="ComputerId" class="form-control" asp-items="ViewBag.ComputerId"></select>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <form asp-action="Create" novalidate>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="ComputerId" class="form-label"></label>
+                <select asp-for="ComputerId" class="form-select" asp-items="ViewBag.ComputerId"></select>
                 <span asp-validation-for="ComputerId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
+
+            <div class="mb-3">
+                <label asp-for="StartTime" class="form-label"></label>
+                <input asp-for="StartTime" type="datetime-local" class="form-control" />
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
+
+            <div class="mb-3">
+                <label asp-for="EndTime" class="form-label"></label>
+                <input asp-for="EndTime" type="datetime-local" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Spara bokning</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Tillbaka</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

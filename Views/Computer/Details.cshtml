@@ -1,36 +1,37 @@
 @model Computer
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detaljer";
 }
 
-<h1>Details</h1>
+<h1 class="page-title mt-5 mb-4 text-center">@ViewData["Title"]</h1>
 
-<div>
-    <h4>Computer</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsAvailable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsAvailable)
-        </dd>
-    </dl>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2 class="h5 mb-3">Dator</h2>
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Namn</dt>
+            <dd class="col-sm-9">@Model?.Name</dd>
+
+            <dt class="col-sm-3">Plats</dt>
+            <dd class="col-sm-9">@Model?.Location</dd>
+
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">
+                @if (Model?.IsAvailable == true)
+                {
+                    <span class="badge bg-success">Aktiv</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">Avstängd</span>
+                }
+            </dd>
+        </dl>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="d-flex gap-2">
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Redigera</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Tillbaka</a>
 </div>

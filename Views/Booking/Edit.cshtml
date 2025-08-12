@@ -1,45 +1,48 @@
 @model Booking
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Redigera bokning";
 }
 
-<h1>Edit</h1>
+<h1 class="page-title mt-5 mb-4 text-center">@ViewData["Title"]</h1>
 
-<h4>Booking</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <form asp-action="Edit" novalidate>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ComputerId" class="control-label"></label>
-                <select asp-for="ComputerId" class="form-control" asp-items="ViewBag.ComputerSelectList"></select>
-                <span class="text-warning">@ViewBag.ComputerWarning</span>
+
+            <div class="mb-3">
+                <label asp-for="ComputerId" class="form-label"></label>
+                <select asp-for="ComputerId" class="form-select" asp-items="ViewBag.ComputerSelectList"></select>
+                @if (ViewBag.ComputerWarning != null)
+                {
+                    <div class="form-text text-warning">@ViewBag.ComputerWarning</div>
+                }
                 <span asp-validation-for="ComputerId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
+
+            <div class="mb-3">
+                <label asp-for="StartTime" class="form-label"></label>
+                <input asp-for="StartTime" type="datetime-local" class="form-control" />
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
+
+            <div class="mb-3">
+                <label asp-for="EndTime" class="form-label"></label>
+                <input asp-for="EndTime" type="datetime-local" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Spara</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Avbryt</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
