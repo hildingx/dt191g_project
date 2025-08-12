@@ -29,8 +29,8 @@ namespace BookingSystem.Controllers
                 return new ComputerAvailabilityViewModel
                 {
                     Id = c.Id,
-                    Name = c.Name,
-                    Location = c.Location,
+                    Name = c.Name ?? string.Empty,
+                    Location = c.Location ?? string.Empty,
                     IsAvailable = c.IsAvailable,
                     IsAvailableNow = c.IsAvailable && !isBusyNow
                 };

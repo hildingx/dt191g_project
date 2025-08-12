@@ -1,4 +1,6 @@
 @model List<ComputerAvailabilityViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 
 <div class="container my-5">
     <h1 class="mb-4">Datorers tillgänglighet just nu</h1>
@@ -18,7 +20,7 @@
                 {
                     <tr>
                         <td>@c.Name</td>
-                        <td>@c.Location</td>
+                        <td>@(c.Location ?? "")</td>
                         <td>
                             @if (!c.IsAvailableNow && !c.IsAvailable)
                             {
@@ -44,7 +46,7 @@
         </table>
     </div>
 
-    @if (!User.Identity.IsAuthenticated)
+    @if (!SignInManager.IsSignedIn(User))
     {
         <div class="mt-4">
             <a class="btn btn-outline-primary"

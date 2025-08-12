@@ -236,7 +236,7 @@ namespace BookingSystem.Controllers
         {
             var booking = await _context.Bookings.FindAsync(id);
 
-            if (!IsOwnerOrAdmin(booking)) return Forbid();
+            if (!IsOwnerOrAdmin(booking!)) return Forbid();
 
             if (booking != null)
             {

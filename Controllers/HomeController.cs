@@ -27,8 +27,8 @@ public class HomeController : Controller
             .Select(c => new ComputerAvailabilityViewModel
             {
                 Id = c.Id,
-                Name = c.Name,
-                Location = c.Location,
+                Name = c.Name ?? string.Empty,
+                Location = c.Location ?? string.Empty,
                 IsAvailable = c.IsAvailable,
                 IsAvailableNow = c.IsAvailable && !c.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now)
             })
