@@ -20,39 +20,32 @@ namespace BookingSystem.Controllers
             _context = context;
         }
 
-        // GET: Computer
+        // Visar lista över alla datorer
         public async Task<IActionResult> Index()
         {
             return View(await _context.Computers.ToListAsync());
         }
 
-        // GET: Computer/Details/5
+        // Visar detaljer för en specifik dator
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var computer = await _context.Computers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (computer == null)
-            {
-                return NotFound();
-            }
+
+            if (computer == null) return NotFound();
 
             return View(computer);
         }
 
-        // GET: Computer/Create
+        // Visar formulär för att skapa en ny dator
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Computer/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Skapar en ny dator
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Location,IsAvailable")] Computer computer)
@@ -66,33 +59,23 @@ namespace BookingSystem.Controllers
             return View(computer);
         }
 
-        // GET: Computer/Edit/5
+        // Visar formulär för att redigera en dator
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var computer = await _context.Computers.FindAsync(id);
-            if (computer == null)
-            {
-                return NotFound();
-            }
+            if (computer == null) return NotFound();
+
             return View(computer);
         }
 
-        // POST: Computer/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Uppdaterar en dator
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location,IsAvailable")] Computer computer)
         {
-            if (id != computer.Id)
-            {
-                return NotFound();
-            }
+            if (id != computer.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +86,28 @@ namespace BookingSystem.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ComputerExists(computer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!ComputerExists(computer.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(computer);
         }
 
-        // GET: Computer/Delete/5
+        // Visar bekräftelsesida för borttagning av en dator
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var computer = await _context.Computers
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (computer == null)
-            {
-                return NotFound();
-            }
+
+            if (computer == null) return NotFound();
 
             return View(computer);
         }
 
-        // POST: Computer/Delete/5
+        // Tar bort dator efter bekräftelse
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -150,6 +122,7 @@ namespace BookingSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Kontroll om dator finns
         private bool ComputerExists(int id)
         {
             return _context.Computers.Any(e => e.Id == id);

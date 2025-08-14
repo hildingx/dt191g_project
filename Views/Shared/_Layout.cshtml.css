@@ -2,7 +2,7 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 .banner-container {
-  max-height: 250px;
+  height: 270px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -11,7 +11,8 @@ for details on configuring this project to bundle and minify static web assets. 
 
 .banner-container img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  min-height: 270px;
 }
 
 .navbar.bg-opacity-75 {

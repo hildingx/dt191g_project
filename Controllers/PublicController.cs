@@ -14,9 +14,10 @@ namespace BookingSystem.Controllers
             _context = context;
         }
 
+        // Visar alla datorer med status om de är lediga just nu
         public async Task<IActionResult> Index()
         {
-            var now = DateTime.Now;
+            var now = DateTime.Now; // Tidpunkt för tillgänglighetskontroll
 
             var computers = await _context.Computers
                 .Include(c => c.Bookings)
@@ -24,6 +25,7 @@ namespace BookingSystem.Controllers
 
             var viewModel = computers.Select(c =>
             {
+                // Upptagen om någon bokning täcker "now"
                 var isBusyNow = c.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now);
 
                 return new ComputerAvailabilityViewModel
@@ -39,6 +41,7 @@ namespace BookingSystem.Controllers
             return View(viewModel);
         }
 
+        // Visar detaljer för en dator och kommande bokade tider (admin ser användarens e-post)
         public async Task<IActionResult> Details(int id)
         {
             var comp = await _context.Computers
@@ -60,13 +63,13 @@ namespace BookingSystem.Controllers
                 IsAvailable = comp.IsAvailable,
                 IsAvailableNow = comp.IsAvailable && !isBusyNow,
                 Slots = comp.Bookings
-                    .Where(b => b.EndTime > now)
+                    .Where(b => b.EndTime > now)                 // Visa kommande bokningar
                     .OrderBy(b => b.StartTime)
                     .Select(b => new BookingSlotVM
                     {
                         StartTime = b.StartTime,
                         EndTime = b.EndTime,
-                        UserEmail = isAdmin ? b.User?.Email : null
+                        UserEmail = isAdmin ? b.User?.Email : null // Visa e-post endast för admin
                     })
                     .ToList()
             };

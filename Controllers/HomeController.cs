@@ -13,14 +13,15 @@ public class HomeController : Controller
     private readonly ApplicationDbContext _context;
 
     public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
-        {
-            _logger = logger;
-            _context = context;
-        }
+    {
+        _logger = logger;
+        _context = context;
+    }
 
+    // Visar startsidan med tre datorer som är lediga just nu
     public async Task<IActionResult> Index()
     {
-        var now = DateTime.Now;
+        var now = DateTime.Now; // Aktuell tid för tillgänglighetskontroll
 
         var featured = await _context.Computers
             .Include(c => c.Bookings)
@@ -30,6 +31,7 @@ public class HomeController : Controller
                 Name = c.Name ?? string.Empty,
                 Location = c.Location ?? string.Empty,
                 IsAvailable = c.IsAvailable,
+                // Tillgänglig nu = dator aktiv och ingen pågående bokning som spänner över "now"
                 IsAvailableNow = c.IsAvailable && !c.Bookings.Any(b => b.StartTime <= now && b.EndTime >= now)
             })
             .Where(c => c.IsAvailableNow)
@@ -45,6 +47,7 @@ public class HomeController : Controller
         return View(vm);
     }
 
+    // Visar felsidan med aktuellt request-id
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
