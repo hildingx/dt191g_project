@@ -11,12 +11,15 @@ public class Booking
     public int ComputerId { get; set; } // FK till Computer
 
     [ForeignKey("ComputerId")]
+    [Display(Name = "Dator")]
     public Computer? Computer { get; set; } // Navigering till datorn
 
     [Required]
+    [Display(Name = "Starttid")]
     public DateTime StartTime { get; set; } // Starttid (krävs)
 
     [Required]
+    [Display(Name = "Sluttid")]
     public DateTime EndTime { get; set; } // Sluttid (krävs; ska vara > StartTime)
 
     [Required]
